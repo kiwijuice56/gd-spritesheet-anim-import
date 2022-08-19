@@ -9,7 +9,7 @@ var selection := get_editor_interface().get_selection()
 var is_docked := false
 
 func _enter_tree() -> void:
-	dock = preload("res://addons/spritesheet_anim_import/ImportDock.tscn").instantiate()
+	dock = load("res://addons/gd-spritesheet-anim-import-main/ImportDock.tscn").instantiate()
 	
 	selection.connect("selection_changed", _on_selection_changed)
 	dock.connect("animation_confirmed", generate_animation)
@@ -67,6 +67,10 @@ func generate_animation(anim_name: String, start: int, end: int, fps: int, durat
 		animation.track_insert_key(track_index, time, frame)
 	
 	animation.loop_mode = loop_mode
+	
+	if len(anim_player.get_animation_library_list()) == 0:
+		var new_anim_lib := AnimationLibrary.new()
+		anim_player.add_animation_library("", new_anim_lib)
 	
 	var anim_lib := anim_player.get_animation_library(anim_player.get_animation_library_list()[0])
 	anim_lib.add_animation(anim_name, animation)
