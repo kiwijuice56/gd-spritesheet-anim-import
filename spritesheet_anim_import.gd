@@ -46,7 +46,7 @@ func generate_animation(anim_name: String, start: int, end: int, fps: int, durat
 	
 	if end == -1:
 		end = sprite.hframes * sprite.vframes
-	if start >= end or end > sprite.hframes * sprite.vframes:
+	if start > end or end > sprite.hframes * sprite.vframes:
 		push_error("Generated animation out of range of sprite frames")
 		return
 	
@@ -63,8 +63,9 @@ func generate_animation(anim_name: String, start: int, end: int, fps: int, durat
 	animation.track_set_path(track_index, str(anim_player.get_parent().get_path_to(sprite)) + ":frame")
 	
 	for frame in range(start, end + 1):
-		var time: float = animation.length * ((frame - start) / float(end - start))
+		var time = animation.length * ((frame - start) / float(end - start + 1))
 		animation.track_insert_key(track_index, time, frame)
+	animation.track_insert_key(track_index, animation.length, end)
 	
 	animation.loop_mode = loop_mode
 	
